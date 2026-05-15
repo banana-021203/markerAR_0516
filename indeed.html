@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HIRO Marker AR</title>
+    <script src="https://aframe.io/releases/1.5.0/aframe.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/AR-js-org/AR.js/aframe/build/aframe-ar.js"></script>
+    <script>
+      function tintModel(entityId, colorHex, roughness, metalness) {
+        var el = document.querySelector(entityId);
+        if (!el) return;
+        el.addEventListener('model-loaded', function () {
+          var root = el.getObject3D('mesh');
+          if (!root) return;
+          root.traverse(function (obj) {
+            if (!obj.isMesh || !obj.material) return;
+            var mats = Array.isArray(obj.material) ? obj.material : [obj.material];
+            mats.forEach(function (m) {
+              if (m.color) m.color.set(colorHex);
+              if ('roughness' in m) m.roughness = roughness;
+              if ('metalness' in m) m.metalness = metalness;
+              m.needsUpdate = true;
+            });
+          });
+        });
+      }
+
+      document.addEventListener('DOMContentLoaded', function () {
+        tintModel('#rocky', '#9b7230', 0.82, 0.14);
+        tintModel('#grace', '#696969', 0.97, 0.02);
+      });
+    </script>
+    <style>
+      body {
+        margin: 0;
+        overflow: hidden;
+        font-family: Arial, sans-serif;
+        background: #000;
+      }
+      #overlay {
+        position: relative;
+        width: 100vw;
+        height: 100vh;
+        pointer-events: none;
+      }
+      a-scene {
+        height: 100%;
+        width: 100%;
+      }
+      .a-enter-vr-button,
+      .a-orientation-modal {
+        display: none !important;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="overlay">
+      <a-scene
+        embedded
+        vr-mode-ui="enabled: false"
+        renderer="colorManagement: true; physicallyCorrectLights: true; antialias: true; alpha: true"
+        arjs="sourceType: webcam; debugUIEnabled: false; trackingMethod: best;"
+      >
+
+        <a-assets>
+          <a-asset-item id="rockyModel" src="./rocky.glb"></a-asset-item>
+          <a-asset-item id="graceModel" src="./grace.glb"></a-asset-item>
+        </a-assets>
+
+        <a-marker preset="hiro" id="hiroMarker">
+
+          <a-entity id="rocky"
+                    gltf-model="#rockyModel"
+                    position="0 0.01 0"
+                    scale="0.02 0.02 0.02"
+                    rotation="-90 180 0">
+          </a-entity>
+
+          <a-entity id="grace"
+                    gltf-model="#graceModel"
+                    position="0.05 0.95 0.03"
+                    scale="0.013 0.013 0.013"
+                    rotation="-90 180 0">
+          </a-entity>
+
+        </a-marker>
+
+        <a-entity light="type: ambient; color: #ffffff; intensity: 1.05"></a-entity>
+        <a-entity light="type: directional; color: #fff3dd; intensity: 1.1" position="1 2 1"></a-entity>
+        <a-entity camera></a-entity>
+
+      </a-scene>
+    </div>
+  </body>
+</html>
