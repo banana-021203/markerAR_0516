@@ -48,22 +48,22 @@
         <a-asset-item id="graceModel" src="./grace.glb"></a-asset-item>
       </a-assets>
 
-      <a-marker preset="hiro">
+      <a-marker type="pattern" url="./pattern-QR_.patt">
 
         <!-- Rocky: マーカーの上 -->
         <a-entity id="rocky"
                   gltf-model="#rockyModel"
                   position="0 0 0"
                   scale="0.02 0.02 0.02"
-                  rotation="180 90 0">
+                    rotation="-90 180 0">
         </a-entity>
 
         <!-- Grace -->
         <a-entity id="grace"
                   gltf-model="#graceModel"
-                  position="0 1.3 0"
+                    position="0 1.2 0"
                   scale="0.013 0.013 0.013"
-                  rotation="180 90 0">
+                    rotation="-90 90 0">
         </a-entity>
 
       </a-marker>
