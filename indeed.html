@@ -28,14 +28,75 @@
       document.addEventListener('DOMContentLoaded', function () {
         tintModel('#rocky', '#9b7230', 0.82, 0.14);
         tintModel('#grace', '#696969', 0.97, 0.02);
+ 
+        var marker = document.querySelector('#hiroMarker');
+        var dialogue = document.getElementById('dialogue');
+        marker.addEventListener('markerFound', function () {
+          dialogue.classList.add('visible');
+        });
+        marker.addEventListener('markerLost', function () {
+          dialogue.classList.remove('visible');
+        });
       });
     </script>
     <style>
       * { margin: 0; padding: 0; box-sizing: border-box; }
       body { overflow: hidden; background: #000; }
+ 
+      /* ダイアログ */
+      #dialogue {
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        padding: 0 12px 12px;
+        opacity: 0;
+        transform: translateY(20px);
+        transition: opacity 0.3s ease, transform 0.3s ease;
+        pointer-events: none;
+        z-index: 999;
+      }
+      #dialogue.visible {
+        opacity: 1;
+        transform: translateY(0);
+      }
+      #name-tag {
+        display: inline-block;
+        background: #1a6fa8;
+        color: #ffffff;
+        font-family: 'Hiragino Kaku Gothic ProN', 'Noto Sans JP', sans-serif;
+        font-size: 15px;
+        font-weight: bold;
+        padding: 4px 14px;
+        border-radius: 4px 4px 0 0;
+        letter-spacing: 0.05em;
+      }
+      #dialogue-box {
+        background: rgba(10, 10, 20, 0.92);
+        border: 2px solid #4a8fc4;
+        border-radius: 0 6px 6px 6px;
+        padding: 14px 16px 16px;
+      }
+      #dialogue-text {
+        color: #ffffff;
+        font-family: 'Hiragino Kaku Gothic ProN', 'Noto Sans JP', sans-serif;
+        font-size: 15px;
+        line-height: 1.8;
+        letter-spacing: 0.03em;
+      }
     </style>
   </head>
   <body>
+    <!-- ダイアログUI -->
+    <div id="dialogue">
+      <div id="name-tag">Rocky / ロッキー</div>
+      <div id="dialogue-box">
+        <div id="dialogue-text">
+          エリダニ40の異星人。岩に足が生えたような蜘蛛のような姿をしており眼が無い。太陽と同じく、故郷の恒星の光が失われかけたために送り出された宇宙飛行士で、技術開発を得意とするエンジニア。
+        </div>
+      </div>
+    </div>
+ 
     <a-scene
       embedded
       vr-mode-ui="enabled: false"
@@ -48,7 +109,7 @@
         <a-asset-item id="graceModel" src="./grace.glb"></a-asset-item>
       </a-assets>
 
-      <a-marker type="pattern" url="./pattern-QR_.patt">
+      <a-marker type="hiro" id="hiroMarker">
 
         <!-- Rocky: マーカーの上 -->
         <a-entity id="rocky"
@@ -66,6 +127,7 @@
                     rotation="-90 0 0">
         </a-entity>
 
+
       </a-marker>
 
       <a-entity light="type: ambient; color: #ffffff; intensity: 1.2"></a-entity>
@@ -73,5 +135,13 @@
       <a-entity camera></a-entity>
 
     </a-scene>
+      <script>
+        document.addEventListener('DOMContentLoaded', function () {
+          document.querySelectorAll('a-marker').forEach(function (m) {
+            m.addEventListener('markerFound', function () { console.log('markerFound', m); });
+            m.addEventListener('markerLost',  function () { console.log('markerLost', m); });
+          });
+        });
+      </script>
   </body>
 </html>
